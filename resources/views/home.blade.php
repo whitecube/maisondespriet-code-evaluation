@@ -15,7 +15,7 @@
                     <p class="title">
                         {{ $user->email }}
                     </p>
-                    <p>Type de client : {{ $user->type ?? 'Non défini' }}</p>
+                    <p>Type de client : {{ $user->client?->type->label() ?? 'Non défini' }}</p>
                 </div>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
