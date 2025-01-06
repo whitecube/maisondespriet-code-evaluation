@@ -12,9 +12,7 @@
         <div id="app">
             <div class="user">
                 <div>
-                    <p class="title">
-                        {{ $user->email }}
-                    </p>
+                    <h1 class="title">{{ $user->name }}</h1>
                     <p>Type de client : {{ $user->client?->type->label() ?? 'Non défini' }}</p>
                 </div>
                 <form action="{{ route('logout') }}" method="POST">
