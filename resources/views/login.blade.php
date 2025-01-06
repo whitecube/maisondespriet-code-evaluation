@@ -9,12 +9,13 @@
         @vite(['resources/css/reset.css', 'resources/css/app.css'])
     </head>
     <body class="login">
-        <form class="login__box" action="">
+        <form class="login__box" action="{{ route('login') }}" method="POST">
+            @csrf
             <label for="user">Utilisateur</label>
-            <select name="" id="">
-                <option value="1">client@exemple.be</option>
-                <option value="2">vip@exemple.be</option>
-                <option value="3">grossiste@exemple.be</option>
+            <select name="user" id="user">
+                @foreach (App\Models\User::all() as $user)
+                <option value="{{ $user->id }}">{{ $user->email }}</option>
+                @endforeach
             </select>
             <button class="button">Se connecter</button>
         </form>

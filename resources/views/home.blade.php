@@ -13,11 +13,12 @@
             <div class="user">
                 <div>
                     <p class="title">
-                        grossiste@exemple.be
+                        {{ $user->email }}
                     </p>
-                    <p>Type de client : Grossiste</p>
+                    <p>Type de client : {{ $user->type ?? 'Non défini' }}</p>
                 </div>
-                <form action="">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
                     <button class="button">Se déconnecter</button>
                 </form>
             </div>
