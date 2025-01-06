@@ -61,3 +61,17 @@ body {
         border-radius: 6px;
     }
 }
+.metas {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+}
+.metas__term {
+    margin-left: 12px;
+}
+.metas__term:first-child{
+    margin: 0;
+}
+.metas__value{
+    font-style: italic;
+}

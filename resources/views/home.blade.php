@@ -13,7 +13,12 @@
             <div class="user">
                 <div>
                     <h1 class="title">{{ $user->name }}</h1>
-                    <p>Type de client : {{ $user->client?->type->label() ?? 'Non défini' }}</p>
+                    <dl class="metas">
+                        <dt class="metas__term">Client&nbsp;:</dt>
+                        <dd class="metas__value">{{ $user->client?->type->label() ?? 'Non défini' }}</dd>
+                        <dt class="metas__term">Fournisseur&nbsp;:</dt>
+                        <dd class="metas__value">{{ $user->supplier ? 'Oui' : 'Non' }}</dd>
+                    </dl>
                 </div>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
