@@ -35,7 +35,7 @@ class OrderController extends Controller
 
         $item = $this->makeOrderProduct($order, $product);
         $item->quantity = $quantity;
-        $item->price_final = $item->price_unit * $quantity;
+        $item->price_final = $item->price_unit->multipliedBy($quantity);
         $item->save();
 
         return $this->getResponse($request, $order);
@@ -74,7 +74,7 @@ class OrderController extends Controller
             $item->delete();
         } else {
             $item->quantity = $quantity;
-            $item->price_final = $item->price_unit * $quantity;
+            $item->price_final = $item->price_unit->multipliedBy($quantity);
             $item->save();
         }
 
@@ -90,7 +90,7 @@ class OrderController extends Controller
     {
         return $order->products()->make([
             'product_id' => $product->id,
-            'price_unit' => $product->price ?? 0,
+            'price_unit' => $product->price_selling ?? 0,
         ]);
     }
 

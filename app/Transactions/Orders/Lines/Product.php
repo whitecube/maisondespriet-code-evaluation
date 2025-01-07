@@ -41,7 +41,7 @@ class Product implements ReceiptLine
 
     public function getDisplayablePrice(): ?string
     {
-        return '€&nbsp;1,00'; // TODO.
+        return $this->item->formatPrice($this->item->price_final);
     }
 
     public function getProductAttributes(): array

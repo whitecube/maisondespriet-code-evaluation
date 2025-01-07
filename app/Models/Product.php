@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\Money;
+use App\Models\Traits\FormatsPrices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,11 +12,19 @@ use Whitecube\Sluggable\HasSlug;
 
 class Product extends Model
 {
-    use SoftDeletes, HasSlug;
+    use SoftDeletes, HasSlug, FormatsPrices;
 
     public $sluggable = 'name';
     
     protected $guarded = [];
+
+    protected function casts(): array
+    {
+        return [
+            'price_acquisition' => Money::class,
+            'price_selling' => Money::class,
+        ];
+    }
 
     public function categories(): BelongsToMany
     {

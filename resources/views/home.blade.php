@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <title>Laravel</title>
 
         @vite(['resources/css/reset.css', 'resources/css/app.css', 'resources/js/app.js'])
