@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Transactions\Orders\Receipt;
 use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
@@ -28,7 +29,7 @@ class HomeController extends Controller
                 'name' => $product->name,
                 'category' => $product->category->name,
             ]),
-            'receipt' => null,
+            'receipt' => new Receipt($order),
         ]);
     }
 }
