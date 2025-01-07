@@ -26,7 +26,7 @@
                 </form>
             </div>
 
-            <cart :products="{{ json_encode($products) }}" :route="{{ $receipt ? route('order.update') : route('order.create') }}" :receipt="{'id':1,'lines':[{'id':154,'line':28,'label':'product','quantity':1,'price':'€ 11,05'}],'total':'€ 11,05'}" />
+            <cart :products="{{ json_encode($products) }}" route="{{ $receipt ? route('order.update') : route('order.create') }}" :receipt="{'id':1,'lines':[{'id':154,'line':28,'label':'product','quantity':1,'price':'€ 11,05'}],'total':'€ 11,05'}" />
         </div>
     </body>
 </html>
