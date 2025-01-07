@@ -9,7 +9,6 @@ interface ReceiptLine
     public function getType(): string;
     public function getLabel(): ?string;
     public function getQuantity(): ?int;
-    public function getDisplayableQuantity(): ?string;
     public function getDisplayablePrice(): ?string;
     public function getProductAttributes(): array;
 }

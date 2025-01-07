@@ -40,7 +40,7 @@ class Receipt implements JsonSerializable
                 'type' => $line->getType(),
                 'deletable' => $line->isDeletable(),
                 'label' => $line->getLabel(),
-                'quantity' => $line->getDisplayableQuantity(),
+                'quantity' => $line->getQuantity(),
                 'price' => $line->getDisplayablePrice(),
             ]));
     }

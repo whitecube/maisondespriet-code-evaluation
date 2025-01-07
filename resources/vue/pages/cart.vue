@@ -50,55 +50,40 @@ export default {
 
     methods: {
         increment(product) {
-            let item = this.lines.find(item => item.id === product.id);
+            let item = this.lines.find(item => item.product === product.id);
 
             if (! item) {
-                this.lines.push({
-                    ...product,
-                    quantity: 1
-                });
-            } else {
-                item.quantity++;
+                return this.update({id: product.id, quantity: 1});
             }
 
-            this.update();
+            this.update({id: product.id, line: item.line, quantity: (item.quantity + 1)});
         },
 
         decrement(product) {
-            let item = this.lines.find(item => item.id === product.id);
+            let item = this.lines.find(item => item.product === product.id);
 
             if (! item) {
                 return;
             }
 
-            item.quantity--;
-
-            if (item.quantity < 1) {
-                this.lines.splice(this.lines.indexOf(item), 1);
-            }
-
-            this.update();
+            this.update({id: product.id, line: item.line, quantity: Math.max(0, item.quantity - 1)});
         },
 
         remove(product) {
-            let item = this.lines.find(item => item.id === product.id);
+            let item = this.lines.find(item => item.product === product.id);
 
             if (! item) {
                 return;
             }
 
-            this.lines.splice(this.lines.indexOf(item), 1);
-
-            this.update();
+            this.update({id: product.id, line: item.line, quantity: 0});
         },
 
-        update() {
-            window.axios.post(this.url, {
-                lines: this.lines,
-            }).then(response => {
+        update(data) {
+            window.axios.post(this.url, data).then(response => {
                 this.lines = response.data.lines;
                 this.total = response.data.total;
-                this.url = response.data.url;
+                this.url = response.data.route;
             });
         }
     }

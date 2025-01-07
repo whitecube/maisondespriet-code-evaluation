@@ -39,11 +39,6 @@ class Product implements ReceiptLine
         return $this->item->quantity;
     }
 
-    public function getDisplayableQuantity(): ?string
-    {
-        return number_format($this->getQuantity(), 2, ',', '&nbsp;');
-    }
-
     public function getDisplayablePrice(): ?string
     {
         return '€&nbsp;1,00'; // TODO.
