@@ -124,6 +124,7 @@ export default {
 }
 
 .cart__aggregates {
+    padding: 12px 0;
     border-top: 1px solid #E9E9E9;
 }
 

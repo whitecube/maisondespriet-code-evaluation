@@ -41,6 +41,7 @@ class Receipt implements JsonSerializable
 
         return collect([
             new Lines\Subtotal($this->products),
+            new Lines\DeliveryFee(),
         ]);
     }
 

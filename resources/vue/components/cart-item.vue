@@ -20,12 +20,11 @@ export default {
     display: flex;
     gap: 12px;
     align-items: center;
-    border-bottom: 1px solid #E9E9E9;
     padding: 12px 0;
 }
 
-.cart-item:last-child {
-    border-bottom: none;
+.cart-item + .cart-item {
+    border-top: 1px solid #E9E9E9;
 }
 
 .cart-item__info {
