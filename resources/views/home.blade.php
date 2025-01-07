@@ -26,17 +26,7 @@
                 </form>
             </div>
 
-            <cart :products="[
-                {id: 1, name: 'Produit 1', category: 'Surgelés' },
-                {id: 2, name: 'Produit 2', category: 'Surgelés' },
-                {id: 3, name: 'Produit 3', category: 'Surgelés' },
-                {id: 4, name: 'Produit 4', category: 'Surgelés' },
-                {id: 5, name: 'Produit 5', category: 'Surgelés' },
-                {id: 6, name: 'Produit 6', category: 'Surgelés' },
-                {id: 7, name: 'Produit 7', category: 'Surgelés' },
-                {id: 8, name: 'Produit 8', category: 'Surgelés' },
-                {id: 9, name: 'Produit 9', category: 'Surgelés' },
-            ]" />
+            <cart :products="{{ json_encode($products) }}" :route="{{ $receipt ? route('order.update') : route('order.create') }}" :receipt="{'id':1,'lines':[{'id':154,'line':28,'label':'product','quantity':1,'price':'€ 11,05'}],'total':'€ 11,05'}" />
         </div>
     </body>
 </html>

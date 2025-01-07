@@ -11,7 +11,13 @@ class HomeController extends Controller
         $user = auth()->user();
 
         return view('home', [
-            'user' => $user
+            'user' => $user,
+            'products' => $products->map(fn(Product $product) => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'category' => $product->category->name,
+            ]),
+            'receipt' => null,
         ]);
     }
 }
