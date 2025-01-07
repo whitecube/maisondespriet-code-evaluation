@@ -11,17 +11,16 @@
         <div class="cart__side">
             <p class="title">Panier</p>
             <div class="cart__items">
-                <p v-if="! cart.length">Le panier est vide</p>
-                <cart-item v-for="item in cart"
+                <p v-if="! lines.length">Le panier est vide</p>
+                <cart-item v-for="item in lines"
                     :key="item.id"
                     :item="item"
-                    @increment="increment(item)"
-                    @decrement="decrement(item)"
                     @remove="remove(item)" />
             </div>
 
             <div class="cart__receipt">
-                <p class="title">Total : {{ total }} €</p>
+                <p class="title">Total</p>
+                <p>{{ total }}</p>
             </div>
         </div>
     </div>
@@ -32,22 +31,29 @@ import Product from '../components/product.vue';
 import CartItem from '../components/cart-item.vue';
 
 export default {
-    props: ['products'],
+    props: ['products', 'receipt'],
     components: { Product, CartItem },
 
     data() {
         return {
-            cart: [],
-            total: 0
+            lines: [],
+            total: 0,
+            url: null
         }
+    },
+
+    mounted() {
+        this.lines = this.receipt.lines;
+        this.total = this.receipt.total;
+        this.url = this.receipt.route;
     },
 
     methods: {
         increment(product) {
-            let item = this.cart.find(item => item.id === product.id);
+            let item = this.lines.find(item => item.id === product.id);
 
             if (! item) {
-                return this.cart.push({
+                return this.lines.push({
                     ...product,
                     quantity: 1
                 });
@@ -57,7 +63,7 @@ export default {
         },
 
         decrement(product) {
-            let item = this.cart.find(item => item.id === product.id);
+            let item = this.lines.find(item => item.id === product.id);
 
             if (! item) {
                 return;
@@ -66,29 +72,31 @@ export default {
             item.quantity--;
 
             if (item.quantity < 1) {
-                this.cart.splice(this.cart.indexOf(item), 1);
+                this.lines.splice(this.lines.indexOf(item), 1);
             }
         },
 
         remove(product) {
-            let item = this.cart.find(item => item.id === product.id);
+            let item = this.lines.find(item => item.id === product.id);
 
             if (! item) {
                 return;
             }
 
-            this.cart.splice(this.cart.indexOf(item), 1);
+            this.lines.splice(this.lines.indexOf(item), 1);
         }
     },
 
     watch: {
         cart: {
             handler: function () {
-                // Temporary
-                this.total = this.cart.reduce((carry, item) => carry += item.quantity, 0);
-
-                // Get totals from back-end
-                // window.axios.post()
+                window.axios.post(this.url, {
+                    lines: this.lines,
+                }).then(response => {
+                    this.lines = response.data.lines;
+                    this.total = response.data.total;
+                    this.url = response.data.url;
+                });
             },
             deep: true
         }
@@ -120,6 +128,8 @@ export default {
 
 .cart__receipt {
     margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
 }
 
 @media screen and (max-width: 1024px) {
