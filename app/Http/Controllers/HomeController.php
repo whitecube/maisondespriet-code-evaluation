@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Transactions\Orders\Receipt;
 use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
@@ -10,6 +11,8 @@ class HomeController extends Controller
     public function show(): View
     {
         $user = auth()->user();
+
+        $order = $user->client?->orders()->cart()->latest()->first();
 
         $products = Product::select('products.*')
             ->join('categories', 'categories.id', 'products.main_category_id')
@@ -26,7 +29,7 @@ class HomeController extends Controller
                 'name' => $product->name,
                 'category' => $product->category->name,
             ]),
-            'receipt' => null,
+            'receipt' => new Receipt($order),
         ]);
     }
 }
