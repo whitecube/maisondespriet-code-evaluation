@@ -15,6 +15,8 @@ class OrderProduct extends Model implements Sortable
         'order_column_name' => 'order',
         'sort_when_creating' => true,
     ];
+    
+    protected $guarded = [];
 
     public function order(): BelongsTo
     {

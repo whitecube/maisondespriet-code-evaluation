@@ -13,6 +13,8 @@ class Order extends Model
 {
     use SoftDeletes;
     
+    protected $guarded = [];
+    
     /**
      * Get the attributes that should be cast.
      *

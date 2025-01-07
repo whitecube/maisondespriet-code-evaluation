@@ -19,6 +19,8 @@ class Category extends Model implements Sortable
     ];
 
     public $sluggable = 'name';
+    
+    protected $guarded = [];
 
     public function products(): BelongsToMany
     {

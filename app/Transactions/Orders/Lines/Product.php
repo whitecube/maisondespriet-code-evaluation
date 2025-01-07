@@ -53,7 +53,7 @@ class Product implements ReceiptLine
     {
         return [
             'line' => $this->item->id,
-            'product' => $this->product->id,
+            'product' => $this->item->product->id,
         ];
     }
 }

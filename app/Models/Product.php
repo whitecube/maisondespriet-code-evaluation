@@ -13,6 +13,8 @@ class Product extends Model
     use SoftDeletes, HasSlug;
 
     public $sluggable = 'name';
+    
+    protected $guarded = [];
 
     public function categories(): BelongsToMany
     {
