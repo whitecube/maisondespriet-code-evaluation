@@ -53,13 +53,15 @@ export default {
             let item = this.lines.find(item => item.id === product.id);
 
             if (! item) {
-                return this.lines.push({
+                this.lines.push({
                     ...product,
                     quantity: 1
                 });
+            } else {
+                item.quantity++;
             }
 
-            item.quantity++;
+            this.update();
         },
 
         decrement(product) {
@@ -74,6 +76,8 @@ export default {
             if (item.quantity < 1) {
                 this.lines.splice(this.lines.indexOf(item), 1);
             }
+
+            this.update();
         },
 
         remove(product) {
@@ -84,21 +88,18 @@ export default {
             }
 
             this.lines.splice(this.lines.indexOf(item), 1);
-        }
-    },
 
-    watch: {
-        cart: {
-            handler: function () {
-                window.axios.post(this.url, {
-                    lines: this.lines,
-                }).then(response => {
-                    this.lines = response.data.lines;
-                    this.total = response.data.total;
-                    this.url = response.data.url;
-                });
-            },
-            deep: true
+            this.update();
+        },
+
+        update() {
+            window.axios.post(this.url, {
+                lines: this.lines,
+            }).then(response => {
+                this.lines = response.data.lines;
+                this.total = response.data.total;
+                this.url = response.data.url;
+            });
         }
     }
 }
