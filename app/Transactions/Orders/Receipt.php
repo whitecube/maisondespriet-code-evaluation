@@ -53,7 +53,9 @@ class Receipt implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'route' => $this->order ? route('order.update', ['order' => $this->order]) : route('order.create'),
+            'route' => is_null($this->order)
+                ? route('order.create')
+                : route('order.update', ['order' => $this->order]),
             'lines' => $this->getDisplayableLines(),
             'total' => $this->getDisplayableTotal(),
         ];
