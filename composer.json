@@ -12,6 +12,7 @@
         "php": "^8.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
+        "spatie/eloquent-sortable": "^4.4",
         "whitecube/laravel-sluggable": "^1.6"
     },
     "require-dev": {

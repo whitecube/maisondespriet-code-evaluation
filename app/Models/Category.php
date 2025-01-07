@@ -5,11 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 use Whitecube\Sluggable\HasSlug;
 
-class Category extends Model
+class Category extends Model implements Sortable
 {
-    use SoftDeletes, HasSlug;
+    use SoftDeletes, SortableTrait, HasSlug;
+
+    public $sortable = [
+        'order_column_name' => 'order',
+        'sort_when_creating' => true,
+    ];
 
     public $sluggable = 'name';
 
