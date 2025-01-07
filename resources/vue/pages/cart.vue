@@ -69,14 +69,12 @@ export default {
             this.update({id: product.id, line: item.line, quantity: Math.max(0, item.quantity - 1)});
         },
 
-        remove(product) {
-            let item = this.lines.find(item => item.product === product.id);
-
+        remove(item) {
             if (! item) {
                 return;
             }
 
-            this.update({id: product.id, line: item.line, quantity: 0});
+            this.update({id: item.product, line: item.line, quantity: 0});
         },
 
         update(data) {
