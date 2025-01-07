@@ -5,10 +5,15 @@ namespace App\Transactions\Orders;
 use JsonSerializable;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\Traits\FormatsPrices;
+use App\Transactions\Orders\Lines\Fake;
 use Illuminate\Support\Collection;
+use Brick\Money\Money;
 
 class Receipt implements JsonSerializable
 {
+    use FormatsPrices;
+    
     protected ?Order $order;
     public Collection $products;
     public Collection $aggregates;
@@ -70,9 +75,17 @@ class Receipt implements JsonSerializable
             ->all();
     }
 
+    public function getTotal(): Money
+    {
+        return $this->aggregates
+            ->reduce(function (Money $carry, ReceiptLine $aggregate) {
+                return $carry->plus($aggregate->getPrice());
+            }, Money::zero('EUR'));
+    }
+
     public function getDisplayableTotal(): string
     {
-        return '€&nbsp;1,00'; // TODO.
+        return $this->formatPrice($this->getTotal());
     }
 
     public function jsonSerialize(): array

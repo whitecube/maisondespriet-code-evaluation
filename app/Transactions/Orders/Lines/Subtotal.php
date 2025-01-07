@@ -3,14 +3,23 @@
 namespace App\Transactions\Orders\Lines;
 
 use App\Models\OrderProduct;
+use App\Models\Traits\FormatsPrices;
 use App\Transactions\Orders\ReceiptLine;
+use Brick\Money\Money;
 use Illuminate\Support\Collection;
+use App\Transactions\Orders\Lines\Product;
 
 class Subtotal implements ReceiptLine
 {
+    use FormatsPrices;
+
+    protected Money $total;
+
     public function __construct(Collection $products)
     {
-        // TODO.
+        $this->total = $products->reduce(function (Money $carry, Product $line) {
+            return $carry->plus($line->getPrice());
+        }, Money::zero('EUR'));
     }
 
     public function isDisplayable(): bool
@@ -38,9 +47,14 @@ class Subtotal implements ReceiptLine
         return null;
     }
 
+    public function getPrice(): Money
+    {
+        return $this->total;
+    }
+
     public function getDisplayablePrice(): ?string
     {
-        return '€&nbsp;1,00'; // TODO.
+        return $this->formatPrice($this->total);
     }
 
     public function getProductAttributes(): array

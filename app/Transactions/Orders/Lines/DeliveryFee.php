@@ -2,10 +2,14 @@
 
 namespace App\Transactions\Orders\Lines;
 
+use App\Models\Traits\FormatsPrices;
 use App\Transactions\Orders\ReceiptLine;
+use Brick\Money\Money;
 
 class DeliveryFee implements ReceiptLine
 {
+    use FormatsPrices;
+    
     public function __construct()
     {
         // TODO.
@@ -36,9 +40,14 @@ class DeliveryFee implements ReceiptLine
         return null;
     }
 
+    public function getPrice(): Money
+    {
+        return Money::of(10, 'EUR');
+    }
+
     public function getDisplayablePrice(): ?string
     {
-        return '€&nbsp;0,00'; // TODO.
+        return $this->formatPrice($this->getPrice());
     }
 
     public function getProductAttributes(): array
