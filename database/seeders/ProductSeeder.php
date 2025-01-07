@@ -80,11 +80,11 @@ class ProductSeeder extends Seeder
     protected function createCategories(): array
     {
         return [
-            'vege' => Category::create(['name' => 'Fruits & légumes']),
-            'deserts' => Category::create(['name' => 'Desserts']),
-            'frozen' => Category::create(['name' => 'Surgelés']),
-            'drinks' => Category::create(['name' => 'Boissons']),
-            'discounts' => Category::create(['name' => 'Promotions']),
+            'vege' => Category::create(['name' => 'Fruits & légumes', 'order' => 1]),
+            'deserts' => Category::create(['name' => 'Desserts', 'order' => 2]),
+            'frozen' => Category::create(['name' => 'Surgelés', 'order' => 4]),
+            'drinks' => Category::create(['name' => 'Boissons', 'order' => 3]),
+            'discounts' => Category::create(['name' => 'Promotions', 'order' => 0]),
         ];
     }
 }
