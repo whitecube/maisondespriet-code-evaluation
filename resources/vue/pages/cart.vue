@@ -11,14 +11,18 @@
         <div class="cart__side">
             <p class="title">Panier</p>
             <div class="cart__items">
-                <p v-if="! lines.length">Le panier est vide</p>
-                <cart-item v-for="item in lines"
+                <p v-if="! items.length" class="cart__empty">Le panier est vide</p>
+                <cart-item v-for="item in items"
                     :key="item.id"
                     :item="item"
                     @remove="remove(item)" />
             </div>
-
-            <div class="cart__receipt">
+            <div class="cart__aggregates" v-if="aggregates.length">
+                <cart-aggregate v-for="item in aggregates"
+                    :key="item.id"
+                    :item="item" />
+            </div>
+            <div class="cart__total">
                 <p class="title">Total</p>
                 <p v-html="total"></p>
             </div>
@@ -29,28 +33,31 @@
 <script>
 import Product from '../components/product.vue';
 import CartItem from '../components/cart-item.vue';
+import CartAggregate from '../components/cart-aggregate.vue';
 
 export default {
     props: ['products', 'receipt'],
-    components: { Product, CartItem },
+    components: { Product, CartItem, CartAggregate },
 
     data() {
         return {
-            lines: [],
+            items: [],
+            aggregates: [],
             total: 0,
             url: null
         }
     },
 
     mounted() {
-        this.lines = this.receipt.lines;
+        this.items = this.receipt.items;
+        this.aggregates = this.receipt.aggregates;
         this.total = this.receipt.total;
         this.url = this.receipt.route;
     },
 
     methods: {
         increment(product) {
-            let item = this.lines.find(item => item.product === product.id);
+            let item = this.items.find(item => item.product === product.id);
 
             if (! item) {
                 return this.update({id: product.id, quantity: 1});
@@ -60,7 +67,7 @@ export default {
         },
 
         decrement(product) {
-            let item = this.lines.find(item => item.product === product.id);
+            let item = this.items.find(item => item.product === product.id);
 
             if (! item) {
                 return;
@@ -79,7 +86,8 @@ export default {
 
         update(data) {
             window.axios.post(this.url, data).then(response => {
-                this.lines = response.data.lines;
+                this.items = response.data.items;
+                this.aggregates = response.data.aggregates;
                 this.total = response.data.total;
                 this.url = response.data.route;
             });
@@ -110,10 +118,21 @@ export default {
     border: 1px solid #E9E9E9;
 }
 
-.cart__receipt {
-    margin-top: 30px;
+.cart__empty {
+    font-style: italic;
+    padding: 12px 0;
+}
+
+.cart__aggregates {
+    border-top: 1px solid #E9E9E9;
+}
+
+.cart__total {
     display: flex;
     justify-content: space-between;
+    border-top: 1px solid #E9E9E9;
+    padding-top: 12px;
+    font-weight: bold;
 }
 
 @media screen and (max-width: 1024px) {

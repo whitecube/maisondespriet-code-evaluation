@@ -10,15 +10,17 @@ use Illuminate\Support\Collection;
 class Receipt implements JsonSerializable
 {
     protected ?Order $order;
-    public Collection $lines;
+    public Collection $products;
+    public Collection $aggregates;
 
     public function __construct(?Order $order = null)
     {
         $this->order = $order;
-        $this->lines = $this->getLines();
+        $this->products = $this->getProducts();
+        $this->aggregates = $this->getAggregates();
     }
 
-    protected function getLines(): Collection
+    protected function getProducts(): Collection
     {
         if(! $this->order) {
             return collect();
@@ -31,18 +33,40 @@ class Receipt implements JsonSerializable
             ->map(fn(OrderProduct $product) => new Lines\Product($product));
     }
 
-    public function getDisplayableLines(): Collection
+    protected function getAggregates(): Collection
     {
-        return $this->lines
+        if($this->products->isEmpty()) {
+            return collect();
+        }
+
+        return collect([
+            new Lines\Subtotal($this->products),
+        ]);
+    }
+
+    public function getDisplayableProducts(): array
+    {
+        return $this->toDisplayableLines($this->products);
+    }
+
+    public function getDisplayableAggregates(): array
+    {
+        return $this->toDisplayableLines($this->aggregates);
+    }
+
+    protected function toDisplayableLines(Collection $collection): array
+    {
+        return $collection
             ->filter(fn(ReceiptLine $line) => $line->isDisplayable())
-            ->values()
             ->map(fn(ReceiptLine $line) => array_merge($line->getProductAttributes(), [
                 'type' => $line->getType(),
                 'deletable' => $line->isDeletable(),
                 'label' => $line->getLabel(),
                 'quantity' => $line->getQuantity(),
                 'price' => $line->getDisplayablePrice(),
-            ]));
+            ]))
+            ->values()
+            ->all();
     }
 
     public function getDisplayableTotal(): string
@@ -56,7 +80,8 @@ class Receipt implements JsonSerializable
             'route' => is_null($this->order)
                 ? route('order.create')
                 : route('order.update', ['order' => $this->order]),
-            'lines' => $this->getDisplayableLines(),
+            'items' => $this->getDisplayableProducts(),
+            'aggregates' => $this->getDisplayableAggregates(),
             'total' => $this->getDisplayableTotal(),
         ];
     }
