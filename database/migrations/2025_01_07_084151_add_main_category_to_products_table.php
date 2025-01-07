@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->foreignId('main_category_id')
+                ->after('id')
                 ->constrained(table: 'categories')
-                ->restrictOnDelete()
-                ->after('id');
+                ->restrictOnDelete();
         });
     }
 

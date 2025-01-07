@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('category_product', function (Blueprint $table) {
             $table->foreignIdFor(Category::class);
             $table->foreignIdFor(Product::class);
+
+            $table->unique(['category_id','product_id']);
         });
     }
 
