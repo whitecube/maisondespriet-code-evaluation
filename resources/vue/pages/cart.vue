@@ -20,7 +20,7 @@
 
             <div class="cart__receipt">
                 <p class="title">Total</p>
-                <p>{{ total }}</p>
+                <p v-html="total"></p>
             </div>
         </div>
     </div>

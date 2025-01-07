@@ -1,11 +1,11 @@
 <template>
     <div class="cart-item">
-        <button class="button" @click.prevent="$emit('remove')">🗑️</button>
+        <button class="button" @click.prevent="$emit('remove')" v-if="item.deletable">🗑️</button>
         <div class="cart-item__info">
-            <p class="cart-item__name">{{ item.name }}</p>
+            <p class="cart-item__name" v-html="item.label"></p>
             <p class="cart-item__quantity">Quantité : {{ item.quantity }}</p>
         </div>
-        <p class="cart-item__price">{{ item.price }}</p>
+        <p class="cart-item__price" v-html="item.price"></p>
     </div>
 </template>
 
