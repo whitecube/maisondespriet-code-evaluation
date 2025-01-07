@@ -11,6 +11,8 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
+        $order = $user->client?->orders()->cart()->latest()->first();
+
         $products = Product::select('products.*')
             ->join('categories', 'categories.id', 'products.main_category_id')
             ->orderBy('categories.order')

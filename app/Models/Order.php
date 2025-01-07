@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Transactions\Orders\OrderStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,5 +33,10 @@ class Order extends Model
     public function products(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    public function scopeCart(Builder $query): void
+    {
+        $query->where('status', OrderStatus::Cart->value);
     }
 }
