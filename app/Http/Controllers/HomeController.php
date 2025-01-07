@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
@@ -10,8 +11,21 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
+        $products = Product::select('products.*')
+            ->join('categories', 'categories.id', 'products.main_category_id')
+            ->orderBy('categories.order')
+            ->orderBy('products.name')
+            ->with('category')
+            ->take(10)
+            ->get();
+
         return view('home', [
-            'user' => $user
+            'user' => $user,
+            'products' => $products->map(fn(Product $product) => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'category' => $product->category->name,
+            ]),
         ]);
     }
 }

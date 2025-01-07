@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Transactions\Clients\ClientType;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Client extends Model
 {
+    use SoftDeletes;
+    
     /**
      * Get the attributes that should be cast.
      *
