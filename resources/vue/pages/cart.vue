@@ -109,6 +109,7 @@ export default {
     display: grid;
     gap: 12px;
     grid-template-columns: repeat(3, 1fr);
+    flex-shrink: 0;
 }
 
 .cart__side {
