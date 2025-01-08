@@ -17,8 +17,8 @@
                     :item="item"
                     @remove="remove(item)" />
             </div>
-            <div class="cart__aggregates" v-if="aggregates.length">
-                <cart-aggregate v-for="item in aggregates"
+            <div class="cart__detail" v-if="detail.length">
+                <cart-detail v-for="item in detail"
                     :key="item.id"
                     :item="item" />
             </div>
@@ -33,16 +33,16 @@
 <script>
 import Product from '../components/product.vue';
 import CartItem from '../components/cart-item.vue';
-import CartAggregate from '../components/cart-aggregate.vue';
+import CartDetail from '../components/cart-detail.vue';
 
 export default {
     props: ['products', 'receipt'],
-    components: { Product, CartItem, CartAggregate },
+    components: { Product, CartItem, CartDetail },
 
     data() {
         return {
             items: [],
-            aggregates: [],
+            detail: [],
             total: 0,
             url: null
         }
@@ -50,7 +50,7 @@ export default {
 
     mounted() {
         this.items = this.receipt.items;
-        this.aggregates = this.receipt.aggregates;
+        this.detail = this.receipt.detail;
         this.total = this.receipt.total;
         this.url = this.receipt.route;
     },
@@ -87,7 +87,7 @@ export default {
         update(data) {
             window.axios.post(this.url, data).then(response => {
                 this.items = response.data.items;
-                this.aggregates = response.data.aggregates;
+                this.detail = response.data.detail;
                 this.total = response.data.total;
                 this.url = response.data.route;
             });
@@ -124,7 +124,7 @@ export default {
     padding: 12px 0;
 }
 
-.cart__aggregates {
+.cart__detail {
     padding: 12px 0;
     border-top: 1px solid #E9E9E9;
 }

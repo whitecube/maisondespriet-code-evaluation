@@ -32,7 +32,7 @@ class Subtotal implements ReceiptLine
 
     public function getType(): string
     {
-        return 'aggregate';
+        return 'detail';
     }
 
     public function getLabel(): ?string

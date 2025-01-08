@@ -17,13 +17,13 @@ class Receipt implements JsonSerializable
 
     public Collection $products;
 
-    public Collection $aggregates;
+    public Collection $detail;
 
     public function __construct(?Order $order = null)
     {
         $this->order = $order;
         $this->products = $this->getProducts();
-        $this->aggregates = $this->getAggregates();
+        $this->detail = $this->getDetail();
     }
 
     protected function getProducts(): Collection
@@ -39,7 +39,7 @@ class Receipt implements JsonSerializable
             ->map(fn (OrderProduct $product) => new Lines\Product($product));
     }
 
-    protected function getAggregates(): Collection
+    protected function getDetail(): Collection
     {
         if ($this->products->isEmpty()) {
             return collect();
@@ -56,9 +56,9 @@ class Receipt implements JsonSerializable
         return $this->toDisplayableLines($this->products);
     }
 
-    public function getDisplayableAggregates(): array
+    public function getDisplayableDetail(): array
     {
-        return $this->toDisplayableLines($this->aggregates);
+        return $this->toDisplayableLines($this->detail);
     }
 
     protected function toDisplayableLines(Collection $collection): array
@@ -78,9 +78,9 @@ class Receipt implements JsonSerializable
 
     public function getTotal(): Money
     {
-        return $this->aggregates
-            ->reduce(function (Money $carry, ReceiptLine $aggregate) {
-                return $carry->plus($aggregate->getPrice());
+        return $this->detail
+            ->reduce(function (Money $carry, ReceiptLine $line) {
+                return $carry->plus($line->getPrice());
             }, Money::zero('EUR'));
     }
 
@@ -96,7 +96,7 @@ class Receipt implements JsonSerializable
                 ? route('order.create')
                 : route('order.update', ['order' => $this->order]),
             'items' => $this->getDisplayableProducts(),
-            'aggregates' => $this->getDisplayableAggregates(),
+            'detail' => $this->getDisplayableDetail(),
             'total' => $this->getDisplayableTotal(),
         ];
     }
