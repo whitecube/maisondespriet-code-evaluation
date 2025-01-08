@@ -9,11 +9,6 @@ use Brick\Money\Money;
 class DeliveryFee implements ReceiptLine
 {
     use FormatsPrices;
-    
-    public function __construct()
-    {
-        // TODO.
-    }
 
     public function isDisplayable(): bool
     {

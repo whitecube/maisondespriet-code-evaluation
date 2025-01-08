@@ -6,7 +6,6 @@ use JsonSerializable;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Traits\FormatsPrices;
-use App\Transactions\Orders\Lines\Fake;
 use Illuminate\Support\Collection;
 use Brick\Money\Money;
 

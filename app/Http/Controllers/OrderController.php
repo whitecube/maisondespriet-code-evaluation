@@ -2,32 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Transactions\Orders\OrderStatus;
 use App\Transactions\Orders\Receipt;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class OrderController extends Controller
 {
-    public function create(Request $request)
+    public function create(CreateOrderRequest $request): JsonResponse|RedirectResponse
     {
-        if(! ($client = $request->user()?->client)) {
-            return abort(400);
-        }
-
-        $data = $request->validate([
-            'id' => ['required','exists:products'],
-            'quantity' => ['required','numeric','min:0'],
-        ]);
-
-        if(! ($quantity = intval($data['quantity']))) {
+        if (! $quantity = $request->quantity) {
             return $this->getResponse($request);
         }
 
-        $product = Product::findOrFail($data['id']);
+        $client = $request->user()?->client;
+        $product = Product::findOrFail($request->id);
 
         $order = $client->orders()->create([
             'status' => OrderStatus::Cart,
@@ -41,49 +36,41 @@ class OrderController extends Controller
         return $this->getResponse($request, $order);
     }
 
-    public function update(Request $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order): JsonResponse|RedirectResponse
     {
-        if(! ($client = $request->user()?->client)) {
-            return abort(400);
-        }
-
-        if($order->client_id !== $client->id) {
-            return abort(404);
-        }
-
-        $order->setRelation('client', $client);
-
-        $data = $request->validate([
-            'id' => ['required','exists:products'],
-            'line' => ['nullable', Rule::in($order->products->pluck('id')->all())],
-            'quantity' => ['required','numeric','min:0'],
-        ]);
-
-        $product = Product::findOrFail($data['id']);
-        $quantity = intval($data['quantity']);
-
-        if($data['line'] ?? null) {
-            $item = $order->products->firstWhere('id', $data['line']);
-        } else if ($quantity) {
-            $item = $this->makeOrderProduct($order, $product, $quantity);
-        } else {
+        if (! $item = $this->getOrderProduct($request, $order)) {
             return $this->getResponse($request, $order);
         }
 
-        if(! $quantity) {
+        if (! $request->quantity) {
             $item->delete();
         } else {
-            $item->quantity = $quantity;
-            $item->price_final = $item->price_unit->multipliedBy($quantity);
+            $item->quantity = $request->quantity;
+            $item->price_final = $item->price_unit->multipliedBy($request->quantity);
             $item->save();
         }
 
-        if(! $order->products()->count()) {
+        if (! $order->products()->count()) {
             $order->forceDelete();
             return $this->getResponse($request);
         }
 
-        return $this->getResponse($request,$order);
+        return $this->getResponse($request, $order);
+    }
+
+    protected function getOrderProduct(UpdateOrderRequest $request, Order $order): ?OrderProduct
+    {
+        if (! is_null($request->line)) {
+            return $order->products->firstWhere('id', $request->line);
+        }
+
+        if ($request->quantity) {
+            $product = Product::findOrFail($request->id);
+
+            return $this->makeOrderProduct($order, $product);
+        } 
+        
+        return null;
     }
 
     protected function makeOrderProduct(Order $order, Product $product): OrderProduct
@@ -94,11 +81,11 @@ class OrderController extends Controller
         ]);
     }
 
-    protected function getResponse(Request $request, ?Order $order = null)
+    protected function getResponse(Request $request, ?Order $order = null): JsonResponse|RedirectResponse
     {
         $receipt = new Receipt($order);
 
-        if($request->ajax()) {
+        if ($request->ajax()) {
             return response()->json($receipt);
         }
 

@@ -13,7 +13,7 @@ class OrderProduct extends Model implements Sortable
 {
     use SortableTrait, FormatsPrices;
 
-    public $sortable = [
+    public array $sortable = [
         'order_column_name' => 'order',
         'sort_when_creating' => true,
     ];

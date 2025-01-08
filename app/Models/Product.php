@@ -14,7 +14,7 @@ class Product extends Model
 {
     use SoftDeletes, HasSlug, FormatsPrices;
 
-    public $sluggable = 'name';
+    public string $sluggable = 'name';
     
     protected $guarded = [];
 

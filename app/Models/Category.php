@@ -13,12 +13,12 @@ class Category extends Model implements Sortable
 {
     use SoftDeletes, SortableTrait, HasSlug;
 
-    public $sortable = [
+    public array $sortable = [
         'order_column_name' => 'order',
         'sort_when_creating' => true,
     ];
 
-    public $sluggable = 'name';
+    public string $sluggable = 'name';
     
     protected $guarded = [];
 
