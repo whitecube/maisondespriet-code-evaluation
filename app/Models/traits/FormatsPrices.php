@@ -2,10 +2,10 @@
 
 namespace App\Models\Traits;
 
-use \NumberFormatter;
 use Brick\Math\RoundingMode;
 use Brick\Money\Context\DefaultContext;
 use Brick\Money\Money;
+use NumberFormatter;
 
 trait FormatsPrices
 {
@@ -15,7 +15,7 @@ trait FormatsPrices
 
         return $formatter->formatCurrency(
             $price->to(new DefaultContext, RoundingMode::HALF_UP)->getAmount()->toFloat(),
-            'EUR' 
+            'EUR'
         );
     }
 }

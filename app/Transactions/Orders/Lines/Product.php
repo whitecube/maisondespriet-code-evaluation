@@ -17,7 +17,7 @@ class Product implements ReceiptLine
 
     public function isDisplayable(): bool
     {
-        return ($this->item->quantity > 0);
+        return $this->item->quantity > 0;
     }
 
     public function isDeletable(): bool

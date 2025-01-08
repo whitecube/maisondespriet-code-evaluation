@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 use Whitecube\Sluggable\HasSlug;
 
 class Category extends Model implements Sortable
 {
-    use SoftDeletes, SortableTrait, HasSlug;
+    use HasSlug, SoftDeletes, SortableTrait;
 
     public array $sortable = [
         'order_column_name' => 'order',
@@ -19,7 +19,7 @@ class Category extends Model implements Sortable
     ];
 
     public string $sluggable = 'name';
-    
+
     protected $guarded = [];
 
     public function products(): BelongsToMany

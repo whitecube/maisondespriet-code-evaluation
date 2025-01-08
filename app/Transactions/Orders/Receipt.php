@@ -2,19 +2,21 @@
 
 namespace App\Transactions\Orders;
 
-use JsonSerializable;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Traits\FormatsPrices;
-use Illuminate\Support\Collection;
 use Brick\Money\Money;
+use Illuminate\Support\Collection;
+use JsonSerializable;
 
 class Receipt implements JsonSerializable
 {
     use FormatsPrices;
-    
+
     protected ?Order $order;
+
     public Collection $products;
+
     public Collection $aggregates;
 
     public function __construct(?Order $order = null)
@@ -26,7 +28,7 @@ class Receipt implements JsonSerializable
 
     protected function getProducts(): Collection
     {
-        if(! $this->order) {
+        if (! $this->order) {
             return collect();
         }
 
@@ -34,18 +36,18 @@ class Receipt implements JsonSerializable
             ->with('product')
             ->ordered()
             ->get()
-            ->map(fn(OrderProduct $product) => new Lines\Product($product));
+            ->map(fn (OrderProduct $product) => new Lines\Product($product));
     }
 
     protected function getAggregates(): Collection
     {
-        if($this->products->isEmpty()) {
+        if ($this->products->isEmpty()) {
             return collect();
         }
 
         return collect([
             new Lines\Subtotal($this->products),
-            new Lines\DeliveryFee(),
+            new Lines\DeliveryFee,
         ]);
     }
 
@@ -62,8 +64,8 @@ class Receipt implements JsonSerializable
     protected function toDisplayableLines(Collection $collection): array
     {
         return $collection
-            ->filter(fn(ReceiptLine $line) => $line->isDisplayable())
-            ->map(fn(ReceiptLine $line) => array_merge($line->getProductAttributes(), [
+            ->filter(fn (ReceiptLine $line) => $line->isDisplayable())
+            ->map(fn (ReceiptLine $line) => array_merge($line->getProductAttributes(), [
                 'type' => $line->getType(),
                 'deletable' => $line->isDeletable(),
                 'label' => $line->getLabel(),

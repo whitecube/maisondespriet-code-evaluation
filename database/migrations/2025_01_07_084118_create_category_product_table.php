@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Category::class);
             $table->foreignIdFor(Product::class);
 
-            $table->unique(['category_id','product_id']);
+            $table->unique(['category_id', 'product_id']);
         });
     }
 

@@ -4,14 +4,14 @@ namespace App\Models;
 
 use App\Transactions\Clients\ClientType;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Client extends Model
 {
     use SoftDeletes;
-    
+
     protected $guarded = [];
 
     protected function casts(): array

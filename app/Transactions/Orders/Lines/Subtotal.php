@@ -2,12 +2,10 @@
 
 namespace App\Transactions\Orders\Lines;
 
-use App\Models\OrderProduct;
 use App\Models\Traits\FormatsPrices;
 use App\Transactions\Orders\ReceiptLine;
 use Brick\Money\Money;
 use Illuminate\Support\Collection;
-use App\Transactions\Orders\Lines\Product;
 
 class Subtotal implements ReceiptLine
 {

@@ -11,9 +11,9 @@ enum ClientType: string
     public function label(): string
     {
         return match ($this) {
-            static::Normal => 'Normal',
-            static::Vip => 'VIP',
-            static::Wholesaler => 'Grossiste',
+            self::Normal => 'Normal',
+            self::Vip => 'VIP',
+            self::Wholesaler => 'Grossiste',
         };
     }
 }

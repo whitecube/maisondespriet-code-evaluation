@@ -31,7 +31,7 @@ class Money implements CastsAttributes
             $value = $value->to(new DefaultContext, RoundingMode::HALF_UP)->getMinorAmount()->toInt();
         }
 
-        if (! is_integer($value)) {
+        if (! is_int($value)) {
             $value = 0;
         }
 

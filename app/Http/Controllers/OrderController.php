@@ -9,9 +9,9 @@ use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Transactions\Orders\OrderStatus;
 use App\Transactions\Orders\Receipt;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -52,6 +52,7 @@ class OrderController extends Controller
 
         if (! $order->products()->count()) {
             $order->forceDelete();
+
             return $this->getResponse($request);
         }
 
@@ -68,8 +69,8 @@ class OrderController extends Controller
             $product = Product::findOrFail($request->id);
 
             return $this->makeOrderProduct($order, $product);
-        } 
-        
+        }
+
         return null;
     }
 

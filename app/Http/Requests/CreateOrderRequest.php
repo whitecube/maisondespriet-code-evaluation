@@ -22,8 +22,8 @@ class CreateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required','exists:products'],
-            'quantity' => ['required','numeric','min:0'],
+            'id' => ['required', 'exists:products'],
+            'quantity' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

@@ -25,9 +25,9 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required','exists:products'],
+            'id' => ['required', 'exists:products'],
             'line' => ['nullable', Rule::in($this->order->products->pluck('id')->all())],
-            'quantity' => ['required','numeric','min:0'],
+            'quantity' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

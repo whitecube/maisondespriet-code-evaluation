@@ -22,7 +22,7 @@ class HomeController extends Controller
 
         return view('home', [
             'user' => $user,
-            'products' => $products->map(fn(Product $product) => [
+            'products' => $products->map(fn (Product $product) => [
                 'id' => $product->id,
                 'name' => $product->name,
                 'category' => $product->category->name,

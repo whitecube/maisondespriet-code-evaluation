@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
+use App\Casts\Money;
+use App\Models\Traits\FormatsPrices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
-use App\Casts\Money;
-use App\Models\Traits\FormatsPrices;
 
 class OrderProduct extends Model implements Sortable
 {
-    use SortableTrait, FormatsPrices;
+    use FormatsPrices, SortableTrait;
 
     public array $sortable = [
         'order_column_name' => 'order',
         'sort_when_creating' => true,
     ];
-    
+
     protected $guarded = [];
 
     protected function casts(): array

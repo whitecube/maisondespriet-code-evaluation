@@ -5,17 +5,17 @@ namespace App\Models;
 use App\Casts\Money;
 use App\Models\Traits\FormatsPrices;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Whitecube\Sluggable\HasSlug;
 
 class Product extends Model
 {
-    use SoftDeletes, HasSlug, FormatsPrices;
+    use FormatsPrices, HasSlug, SoftDeletes;
 
     public string $sluggable = 'name';
-    
+
     protected $guarded = [];
 
     protected function casts(): array
