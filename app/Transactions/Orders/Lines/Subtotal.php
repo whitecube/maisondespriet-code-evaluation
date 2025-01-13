@@ -12,12 +12,18 @@ class Subtotal implements ReceiptLine
     use FormatsPrices;
 
     protected Money $total;
+    protected Money $margin;
 
     public function __construct(Collection $products)
     {
         $this->total = $products->reduce(function (Money $carry, Product $line) {
             return $carry->plus($line->getPrice());
         }, Money::zero('EUR'));
+        
+        $this->margin = $products->reduce(function (Money $carry, Product $line) {
+            return $carry->plus($line->getReductionAmount());
+        }, Money::zero('EUR'));
+        
     }
 
     public function isDisplayable(): bool
@@ -49,7 +55,15 @@ class Subtotal implements ReceiptLine
     {
         return $this->total;
     }
+    public function getReductionAmount(): Money
+    {
+        return Money::of(00, 'EUR');
+    }
 
+    public function getMargin(): Money
+    {
+        return $this->margin;
+    }
     public function getDisplayablePrice(): ?string
     {
         return $this->formatPrice($this->total);

@@ -5,10 +5,21 @@ namespace App\Transactions\Orders\Lines;
 use App\Models\Traits\FormatsPrices;
 use App\Transactions\Orders\ReceiptLine;
 use Brick\Money\Money;
+use Illuminate\Support\Collection;
 
-class DeliveryFee implements ReceiptLine
+class Reduction implements ReceiptLine
 {
     use FormatsPrices;
+
+    protected Money $reduction_amount;
+
+    public function __construct(Collection $products)
+    {   
+       
+        $this->reduction_amount = $products->reduce(function (Money $carry, Product $line) {
+            return $carry->plus($line->getReductionAmount());
+        }, Money::zero('EUR'));
+    }
 
     public function isDisplayable(): bool
     {
@@ -27,7 +38,7 @@ class DeliveryFee implements ReceiptLine
 
     public function getLabel(): ?string
     {
-        return 'Livraison';
+        return 'Remise';
     }
 
     public function getQuantity(): ?int
@@ -37,19 +48,15 @@ class DeliveryFee implements ReceiptLine
 
     public function getPrice(): Money
     {
-        return Money::of(10, 'EUR');
+        return Money::of(00, 'EUR');
     }
     public function getReductionAmount(): Money
     {
-        return Money::of(00, 'EUR');
-    }
-    public function getMargin(): Money
-    {
-        return Money::of(00, 'EUR');
+        return $this->reduction_amount;
     }
     public function getDisplayablePrice(): ?string
     {
-        return $this->formatPrice($this->getPrice());
+        return '- '.$this->formatPrice($this->reduction_amount);
     }
 
     public function getProductAttributes(): array
