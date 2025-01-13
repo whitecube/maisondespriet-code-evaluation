@@ -45,6 +45,11 @@ class Product implements ReceiptLine
         return $this->item->price_final;
     }
 
+    public function getReductionAmount(): Money
+    {
+        return $this->item->reduction_amount;
+    }
+
     public function getDisplayablePrice(): ?string
     {
         return $this->item->formatPrice($this->getPrice());

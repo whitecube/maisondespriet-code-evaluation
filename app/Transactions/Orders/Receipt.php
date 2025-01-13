@@ -4,6 +4,7 @@ namespace App\Transactions\Orders;
 
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\Client;
 use App\Models\Traits\FormatsPrices;
 use Brick\Money\Money;
 use Illuminate\Support\Collection;
@@ -18,12 +19,14 @@ class Receipt implements JsonSerializable
     public Collection $products;
 
     public Collection $detail;
+    
 
     public function __construct(?Order $order = null)
     {
         $this->order = $order;
         $this->products = $this->getProducts();
         $this->detail = $this->getDetail();
+        
     }
 
     protected function getProducts(): Collection
@@ -31,7 +34,7 @@ class Receipt implements JsonSerializable
         if (! $this->order) {
             return collect();
         }
-
+        
         return $this->order->products()
             ->with('product')
             ->ordered()
@@ -44,11 +47,23 @@ class Receipt implements JsonSerializable
         if ($this->products->isEmpty()) {
             return collect();
         }
-
-        return collect([
-            new Lines\Subtotal($this->products),
-            new Lines\DeliveryFee,
-        ]);
+        
+        $type = Client::select('type')->where('id',$this->order->client_id)->first()->type->value;
+        if($type == 'vip'){
+            return collect([
+                new Lines\Subtotal($this->products),
+                new Lines\Reduction($this->products),
+                new Lines\DeliveryFee,
+            ]);
+        }
+        else{
+            return collect([
+                new Lines\Subtotal($this->products),
+                 //new Lines\Reduction($this->products),
+                new Lines\DeliveryFee,
+            ]);
+        }
+        
     }
 
     public function getDisplayableProducts(): array
@@ -77,11 +92,23 @@ class Receipt implements JsonSerializable
     }
 
     public function getTotal(): Money
-    {
+    {   
+        if(!is_null($this->order)){
+            $type = Client::select('type')->where('id',$this->order->client_id)->first()->type->value;
+            if($type == 'wholesaler'){
+                return $this->detail
+                 ->reduce(function (Money $carry, ReceiptLine $line) {
+                    return $carry->plus($line->getPrice()->plus($line->getMargin()));
+                }, Money::zero('EUR'));
+            }
+        }
+        
         return $this->detail
             ->reduce(function (Money $carry, ReceiptLine $line) {
-                return $carry->plus($line->getPrice());
+                return $carry->plus($line->getPrice()->minus($line->getReductionAmount()));
             }, Money::zero('EUR'));
+       
+       
     }
 
     public function getDisplayableTotal(): string

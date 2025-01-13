@@ -39,7 +39,14 @@ class DeliveryFee implements ReceiptLine
     {
         return Money::of(10, 'EUR');
     }
-
+    public function getReductionAmount(): Money
+    {
+        return Money::of(00, 'EUR');
+    }
+    public function getMargin(): Money
+    {
+        return Money::of(00, 'EUR');
+    }
     public function getDisplayablePrice(): ?string
     {
         return $this->formatPrice($this->getPrice());

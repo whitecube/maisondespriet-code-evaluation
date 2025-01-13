@@ -25,6 +25,7 @@ class OrderProduct extends Model implements Sortable
         return [
             'price_unit' => Money::class,
             'price_final' => Money::class,
+            'reduction_amount' => Money::class,
         ];
     }
 

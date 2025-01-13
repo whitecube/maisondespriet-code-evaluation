@@ -7,20 +7,16 @@ use App\Transactions\Orders\ReceiptLine;
 use Brick\Money\Money;
 use Illuminate\Support\Collection;
 
-class Subtotal implements ReceiptLine
+class Reduction implements ReceiptLine
 {
     use FormatsPrices;
 
-    protected Money $total;
-    protected Money $margin;
+    protected Money $reduction_amount;
 
     public function __construct(Collection $products)
-    {
-        $this->total = $products->reduce(function (Money $carry, Product $line) {
-            return $carry->plus($line->getPrice());
-        }, Money::zero('EUR'));
-
-        $this->margin = $products->reduce(function (Money $carry, Product $line) {
+    {   
+       
+        $this->reduction_amount = $products->reduce(function (Money $carry, Product $line) {
             return $carry->plus($line->getReductionAmount());
         }, Money::zero('EUR'));
     }
@@ -42,7 +38,7 @@ class Subtotal implements ReceiptLine
 
     public function getLabel(): ?string
     {
-        return 'Sous-total';
+        return 'Remise';
     }
 
     public function getQuantity(): ?int
@@ -52,20 +48,15 @@ class Subtotal implements ReceiptLine
 
     public function getPrice(): Money
     {
-        return $this->total;
+        return Money::of(00, 'EUR');
     }
     public function getReductionAmount(): Money
     {
-        return Money::of(00, 'EUR');
-    }
-
-    public function getMargin(): Money
-    {
-        return $this->margin;
+        return $this->reduction_amount;
     }
     public function getDisplayablePrice(): ?string
     {
-        return $this->formatPrice($this->total);
+        return '- '.$this->formatPrice($this->reduction_amount);
     }
 
     public function getProductAttributes(): array

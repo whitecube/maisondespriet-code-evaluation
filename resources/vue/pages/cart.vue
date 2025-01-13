@@ -22,6 +22,10 @@
                     :key="item.id"
                     :item="item" />
             </div>
+            <div class="cart__reduction">
+                <p class="title">Reduction</p>
+                <p v-html="reduction"></p>
+            </div>
             <div class="cart__total">
                 <p class="title">Total</p>
                 <p v-html="total"></p>
