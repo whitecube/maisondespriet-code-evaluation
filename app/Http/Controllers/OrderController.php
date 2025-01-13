@@ -38,6 +38,7 @@ class OrderController extends Controller
         $item->quantity = $quantity;
         $item->price_final = $item->price_unit->multipliedBy($quantity);
         $type = Client::select('type')->where('id',$order->client_id)->first()->type->value;
+        
         if($type != 'wholesale'){
             $item->reduction_amount = $item->price_final->multipliedBy($bestPromotion/100,RoundingMode::DOWN);
         }
@@ -112,8 +113,9 @@ class OrderController extends Controller
         $type = Client::select('type')->where('id',$order->client_id)->first()->type->value;
         $product_category_id = Product::with('categories')->find($product->id);
     
-        if($type != 'Wholesale'){
-              // get le plus gros pourcentage en fonction du type & id_categ
+        if($type == 'normal')
+            return 0;
+        if($type != 'wholesale'){
             $bestPromotion = Promotion::select('percentage')
                 ->whereIn('category_id', $product->categories->pluck('id')->toArray())
                 ->orwhere('type', $type) 
@@ -127,7 +129,7 @@ class OrderController extends Controller
                 ->orderBy('percentage', 'desc')  
                 ->first();
         }
-        return $bestPromotion->percentage;
+        return $bestPromotion ? $bestPromotion->percentage : 0;
     }
 
     protected function getResponse(Request $request, ?Order $order = null): JsonResponse|RedirectResponse

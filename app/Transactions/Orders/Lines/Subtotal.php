@@ -19,10 +19,11 @@ class Subtotal implements ReceiptLine
         $this->total = $products->reduce(function (Money $carry, Product $line) {
             return $carry->plus($line->getPrice());
         }, Money::zero('EUR'));
-
+        
         $this->margin = $products->reduce(function (Money $carry, Product $line) {
             return $carry->plus($line->getReductionAmount());
         }, Money::zero('EUR'));
+        
     }
 
     public function isDisplayable(): bool
