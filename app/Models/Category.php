@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\EloquentSortable\Sortable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\EloquentSortable\SortableTrait;
 use Whitecube\Sluggable\HasSlug;
 
 class Category extends Model implements Sortable
 {
-    use HasSlug, SoftDeletes, SortableTrait;
+    use HasSlug, SoftDeletes, SortableTrait, HasFactory;
 
     public array $sortable = [
         'order_column_name' => 'order',

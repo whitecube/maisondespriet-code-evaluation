@@ -2,14 +2,21 @@
 
 namespace App\Models;
 
-use App\Transactions\Clients\ClientType;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class Promotion extends Model
 {
-    
+    use HasFactory;
+
+    protected $fillable = [
+        'percentage',  
+        'category_id', 
+        'type', 
+    ];
     # Une date de début et de fin serait une amélioration possible
     # La possibilité de lier une promotion à plusieurs groupes client et aussi à plusieurs categories seraient de bonnes améliorations pour faciliter la configuration
     

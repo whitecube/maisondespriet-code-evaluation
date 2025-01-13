@@ -7,12 +7,13 @@ use App\Models\Traits\FormatsPrices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Whitecube\Sluggable\HasSlug;
 
 class Product extends Model
 {
-    use FormatsPrices, HasSlug, SoftDeletes;
+    use FormatsPrices, HasSlug, SoftDeletes, HasFactory;
 
     public string $sluggable = 'name';
 
